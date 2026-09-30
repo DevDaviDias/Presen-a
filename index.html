@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chamada da Escola</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b1f24;--mu:#6b7280;--bd:#e3e6ea;--ac:#2563eb;--ok:#16a34a;--wa:#d97706;--ba:#dc2626;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1216;--card:#181c22;--tx:#eceff3;--mu:#9aa3af;--bd:#2a3039;--ac:#60a5fa;--ok:#4ade80;--wa:#fbbf24;--ba:#f87171}}
+:root[data-theme="dark"]{--bg:#0f1216;--card:#181c22;--tx:#eceff3;--mu:#9aa3af;--bd:#2a3039;--ac:#60a5fa;--ok:#4ade80;--wa:#fbbf24;--ba:#f87171}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:820px;margin:0 auto;padding:16px}
+h1{font-size:20px;margin:0}h2{font-size:16px;margin:20px 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sub{color:var(--mu);font-size:13px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+.n{font-size:26px;font-weight:700}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600;color:#fff}
+.presente{background:var(--ok)}.atrasado{background:var(--wa)}.falta{background:var(--ba)}.pendente{background:var(--mu)}
+.sc{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+td,th{padding:9px 8px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}
+th{font-size:12px;color:var(--mu);font-weight:600}
+select,input{font:inherit;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:6px 8px}
+.hm{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.pick{display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;padding:26px 14px;cursor:pointer;color:var(--tx);font:inherit}
+.btn,.out{border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+.btn{background:var(--ac);color:#fff;border:0;font-weight:600;width:100%}
+.badge{font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid var(--bd);background:var(--card)}
+.log{padding:8px 0;border-bottom:1px solid var(--bd);font-size:14px}
+.ed{color:var(--wa);font-size:12px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
+.st{padding:12px}.st b{display:block;margin:4px 0}.st .e{font-size:28px}
+.who{margin-top:10px;font-size:14px}.who td{padding:8px}
+.nm{background:none;border:0;color:var(--ac);font:inherit;font-weight:600;cursor:pointer;padding:0;text-align:left}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;z-index:9}
+.md{background:var(--card);color:var(--tx);width:100%;max-width:520px;max-height:90%;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+@media(min-width:600px){.ov{align-items:center}.md{border-radius:18px}}
+.bar{height:10px;border-radius:99px;background:var(--bd);overflow:hidden;margin:8px 0}.bar i{display:block;height:100%}
+.sq{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0}.sq i{width:18px;height:18px;border-radius:5px}
+.rk{display:flex;justify-content:space-between;padding:7px 8px;border-radius:8px;font-size:14px}.rk.me{background:var(--ac);color:#fff;font-weight:700}
+.big{font-size:34px;font-weight:800}
+</style></head><body><div class="w">
+<div class="top"><div><h1>🎒 Chamada da Escola</h1><div class="sub" id="dt"></div></div>
+<div id="hd"></div></div>
+<div id="app"></div></div>
+<script>
+const ST={presente:"Presente",atrasado:"Atrasado",falta:"Falta",pendente:"Ainda não chegou"};
+const alunos=["Ana Souza","Bruno Lima","Carla Dias","Daniel Rocha","Eduarda Melo","Felipe Nunes","Gabriela Alves","Heitor Costa","Isabela Reis","João Pereira"]
+.map((nome,i)=>{const s=["presente","presente","atrasado","presente","falta","presente","presente","pendente","atrasado","presente"][i];
+const h={presente:"07:1"+(i%10),atrasado:"07:4"+(i%10)}[s]||"";return{nome,s,h,alt:null}});
+let sd=11;const rnd=()=>(sd=(sd*9301+49297)%233280)/233280;
+alunos.forEach((a,i)=>{a.hist=[];for(let k=0;k<19;k++){const x=rnd(),lim=[.9,.85,.7,.92,.6,.88,.95,.8,.75,.9][i];a.hist.push(x<lim?"presente":x<lim+.06?"atrasado":"falta")}});
+const logs=[];let aberto=null;
+let papel="r",filtro="todos",erro="";
+const agora=()=>new Date().toTimeString().slice(0,5);
+const tag=s=>`<span class="tag ${s}">${ST[s]}</span>`;
+function stats(a){const t=[...a.hist,...(a.s=="pendente"?[]:[a.s])],p=t.filter(x=>x=="presente").length,at=t.filter(x=>x=="atrasado").length,f=t.filter(x=>x=="falta").length;return{t,p,at,f,freq:Math.round((p+at)/t.length*100)}}
+function modal(){const a=alunos[aberto],m=stats(a),rk=alunos.map((x,i)=>({i,...stats(x)})).sort((x,y)=>y.freq-x.freq||x.at-y.at),pos=rk.findIndex(x=>x.i==aberto)+1,cor=m.freq<75?"ba":m.freq<85?"wa":"ok";
+const c={presente:"ok",atrasado:"wa",falta:"ba"};
+return `<div class="ov" onclick="aberto=null;render()"><div class="md" onclick="event.stopPropagation()">
+<div class="top"><div><b style="font-size:18px">${a.nome}</b><div class="sub">Hoje: ${ST[a.s]}${a.h?" às "+a.h.slice(0,5):""}</div></div><button class="out" onclick="aberto=null;render()">Fechar</button></div>
+<div class="grid"><div class="card"><div class="sub">Ranking de assiduidade</div><div class="big">${pos}º</div><div class="sub">de ${alunos.length} alunos</div></div>
+<div class="card"><div class="sub">Frequência</div><div class="big" style="color:var(--${cor})">${m.freq}%</div><div class="sub">${m.f} falta(s) · ${m.at} atraso(s)</div></div></div>
+<div class="bar"><i style="width:${m.freq}%;background:var(--${cor})"></i></div>
+<div class="sub">${m.freq<75?"⚠️ Abaixo do mínimo de 75%":"Dentro do mínimo de 75%"} · últimos ${m.t.length} dias (verde presente, amarelo atraso, vermelho falta)</div>
+<div class="sq">${m.t.map(x=>`<i style="background:var(--${c[x]})"></i>`).join("")}</div>
+<h2>Ranking da turma</h2>${rk.map((x,k)=>`<div class="rk ${x.i==aberto?"me":""}"><span>${k+1}º ${alunos[x.i].nome}</span><span>${x.freq}%</span></div>`).join("")}</div></div>`}
+function painel(){const r=papel=="r",c={presente:0,atrasado:0,falta:0,pendente:0};alunos.forEach(a=>c[a.s]++);
+let h=`<h2>Turma 8º A · hoje</h2><div class="grid">`+[["presente","Presentes","ok"],["atrasado","Atrasados","wa"],["falta","Faltas","ba"],["pendente","Não chegaram","mu"]]
+.map(([k,l,v])=>`<div class="card"><div class="sub">${l}</div><div class="n" style="color:var(--${v})">${c[k]}</div></div>`).join("")+`</div>
+<h2>Alunos</h2><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">`+
+["todos","presente","atrasado","falta","pendente"].map(k=>`<button class="out" style="${filtro==k?"background:var(--ac);color:#fff":""}" onclick="filtro='${k}';render()">${k=="todos"?"Todos":ST[k]}</button>`).join("")+
+`</div><div class="card sc"><table><tr><th>Aluno</th><th>Status</th><th>Horário</th>${r?"<th>Corrigir</th>":""}</tr>`;
+alunos.forEach((a,i)=>{if(filtro!="todos"&&a.s!=filtro)return;
+h+=`<tr><td><button class="nm" onclick="aberto=${i};render()">${a.nome}</button></td><td>${tag(a.s)}</td><td>${a.h||"–"}${a.alt?` <span class="ed">✎ alterado às ${a.alt}</span>`:""}</td>`+
+(r?`<td><select onchange="mudar(${i},this.value)"><option value="">Escolher…</option>${["presente","atrasado","falta","pendente"].map(s=>`<option value="${s}">${ST[s]}</option>`).join("")}</select></td>`:"")+`</tr>`});
+h+=`</table></div><h2>Registro de alterações</h2><div class="card">`+(logs.length?logs.map(l=>`<div class="log">${l}</div>`).join(""):`<div class="sub">Nenhuma alteração feita hoje.</div>`)+`</div>`;
+return h}
+function render(){app.innerHTML=painel()+(aberto!==null?modal():"");hd.innerHTML=`<span class="badge">🧑‍🏫 Professor</span>`}
+dt.textContent=new Date().toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+render();
+</script></body></html>
